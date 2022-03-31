@@ -54,7 +54,6 @@ exports.login = async (req, res, next) => {
   if (!user) {
     return res.status(400).json({ success: false, msg: "Invalid credentials" });
   }
-
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
@@ -69,4 +68,15 @@ exports.login = async (req, res, next) => {
 exports.getMe = async (req, res, next) => {
   const user = await User.findById(req.user.id);
   res.status(200).json({ success: true, data: user });
+};
+
+exports.logout = async (res, req, next) => {
+  res.cookie("token", "none", {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
 };

@@ -13,10 +13,11 @@ exports.protect = async (req, res, next) => {
   }
 
   //Make sure token exits
-  if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, msg: "Not authorize to access this route" });
+  if (!token || token == "null") {
+    return res.status(401).json({
+      success: false,
+      msg: "Not authorize to access this route 1",
+    });
   }
 
   try {
@@ -32,18 +33,16 @@ exports.protect = async (req, res, next) => {
     console.log(err.stack);
     return res
       .status(401)
-      .json({ success: false, msg: "Not authorize to access this route" });
+      .json({ success: false, msg: "Not authorize to access this route 2" });
   }
 };
 exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          msg: `User role ${req.user.role} is not authorized to access this route`,
-        });
+      return res.status(403).json({
+        success: false,
+        msg: `User role ${req.user.role} is not authorized to access this route 3`,
+      });
     }
     next();
   };
